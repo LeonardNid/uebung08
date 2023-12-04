@@ -8,13 +8,9 @@ import jakarta.persistence.*;
 public class MovieCharacter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "movcharid")
     private Long id;
-
     private String character;
-
     private String alias;
-
     private Integer position;
 
     @ManyToOne
@@ -24,27 +20,28 @@ public class MovieCharacter {
     @ManyToOne
     @JoinColumn(name = "personid")
     private Person person;
-    public MovieCharacter(Long movCharID, String character, String alias, Integer position, Long movieID, Long personID) {
+
+
+    public MovieCharacter(Long movCharID, String character, String alias) {
         this.id = movCharID;
         this.character = character;
         this.alias = alias;
-        this.position = position;
-        // Laden Sie das zugehörige Movie-Objekt aus der Datenbank
-        EntityManager entityManager = Main.getEmf().createEntityManager();
-        this.movie = entityManager.find(Movie.class, id);
-//        this.movie = new Movie(movieID); // Erstellen Sie eine Movie-Instanz mit der angegebenen movieID
-//        this.person = new Person(personID); // Erstellen Sie eine Person-Instanz mit der angegebenen personID
     }
-    public MovieCharacter(String character, String alias, Integer position, Long movieID, Long personID) {
+    public MovieCharacter(String character, String alias) {
         this.character = character;
         this.alias = alias;
-        this.position = position;
-//        this.movie = new Movie(movieID); // Erstellen Sie eine Movie-Instanz mit der angegebenen movieID
-//        this.person = new Person(personID); // Erstellen Sie eine Person-Instanz mit der angegebenen personID
     }
 
     public MovieCharacter() {
 
+    }
+
+    public void addMovie(Long movieId, EntityManager em) {
+        this.movie = em.find(Movie.class, movieId);
+    }
+
+    public void addPerson(Long personId, EntityManager em) {
+        this.person = em.find(Person.class, personId);
     }
 
     public Long getId() {
@@ -63,4 +60,7 @@ public class MovieCharacter {
         return position;
     }
 
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 }
